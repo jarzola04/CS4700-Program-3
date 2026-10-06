@@ -1,10 +1,10 @@
 using UnityEngine;
-using TMPro; // Remove if using legacy Text components
+using TMPro; // I dunno if we need this one
 
 public class InventoryUI : MonoBehaviour
 {
-    public Transform contentParent; // Your menu panel with the Vertical Layout Group
-    public GameObject textLinePrefab; // The InventoryTextLine prefab
+    public Transform contentParent;
+    public GameObject textLinePrefab;
 
     void Start()
     {
