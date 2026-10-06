@@ -1,5 +1,10 @@
 public class Battle : monoBehaviour
 {
+    public Group playerGroup;
+    public Group enemyGroup;
+    public BattleState state;
+    public WindowBattleLog windowBattleLog;
+
     enum BattleState
     {
         Initialize,
@@ -25,9 +30,9 @@ public class Battle : monoBehaviour
 
     private void Update()
     {
-        switch(BattleState)
+        switch(state)
         {
-            case BattleState.Initialize:
+            case state.Initialize:
                 turn = 0;
                 var msg = playerGroup.member.name + "is ready for battle! HP: " + playerGroup.member.Hp;
                 windowBattleLog.AddText(msg, false);
@@ -35,14 +40,14 @@ public class Battle : monoBehaviour
                 windowBattleLog.AddText(msg);
                 ChangeState(BattleState.WaitCommand);
                 break;
-            case BattleState.WaitCommand:
+            case state.WaitCommand:
                 if(Input.GetButtonDown("Submit"))
                 {
                     windowBattleLog.ClearText();
                     ChangeState(BattleState.Executing);
                 }
                 break;
-            case BattleState.Executing:
+            case state.Executing:
                 Character attacker, target;
                 attacker = enemyGroup.member;
                 target = playerGroup.member;
@@ -64,7 +69,7 @@ public class Battle : monoBehaviour
                 state = enemyGroup.Dead() ? BattleState.Result : BattleState.WaitCommand;
                 break;
 
-            case BattleState.Result:
+            case state.Result:
                 if (Input.GetButtonDown("Submit"))
                 {
                     windowBattleLog.ClearText();
