@@ -3,7 +3,8 @@ public class Battle : monoBehaviour
     public Group playerGroup;
     public Group enemyGroup;
     public BattleState state;
-    public WindowBattleLog windowBattleLog;
+    private WindowBattleLog windowBattleLog;
+    private Vocab vocab;
 
     enum BattleState
     {
@@ -72,9 +73,13 @@ public class Battle : monoBehaviour
             case state.Result:
                 if (Input.GetButtonDown("Submit"))
                 {
-                    windowBattleLog.ClearText();
-                    windowBattleLog.AddText("Enemy defeated!");
-                    ChangeState(BattleState.End);
+                    windowBattleLog.AddText("");
+                    windowBattleLog.AddText(vocab.Victory(enemyGroup.member.name));
+                    windowBattleLog.AddText("");
+                    windowBattleLog.AddText(vocab.Exp(enemyGroup.member.exp));
+                    windowBattleLog.AddText(vocab.Gold(enemyGroup.member.gold));
+                    windowBattleLog.AddText("");
+                    ChangeState(state.End);
                 }
                 break;
         }
