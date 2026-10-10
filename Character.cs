@@ -2,7 +2,20 @@ public class Character
 {
     public string name{get; private set;}
 
+    public int strength{get; private set;}
+
+    public int agility{get; private set;}
+
     private int hp;
+    private int maxHP;
+
+    private int mp;
+    private int maxMP;
+
+    public int exp;
+    public int level{get; private set;}
+    public int gold;
+    
     public int Hp
     {
         get

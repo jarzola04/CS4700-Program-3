@@ -1,17 +1,30 @@
-public class Battle : monoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+
+public class Battle : MonoBehaviour
 {
     public Group playerGroup;
     public Group enemyGroup;
-    public BattleState state;
+    public BattlePhase phase = BattlePhase.Initialize;
+    [SerializeField]
     private WindowBattleLog windowBattleLog;
+    [SerializeField]
+    private WindowBattleCommand windowBattleCommand;
     private Vocab vocab;
+    private Coroutine executionCoroutine;
+    private List<Command> commands = new List<Command>();
+    private int turn;
 
-    enum BattleState
+    enum BattlePhase
     {
         Initialize,
         WaitCommand,
-        Executing,
+        ChooseCommand,
+        Execute,
         Result,
+        End
     }
     void Start()
     {
@@ -26,51 +39,55 @@ public class Battle : monoBehaviour
 
     private void Enter()
     {
+        commands.Clear();
         CreateWindowBattleLog();
+        ChangeState(BattlePhase.Initialize);
     }
 
     private void Update()
     {
-        switch(state)
+        switch(phase)
         {
-            case state.Initialize:
+            case BattlePhase.Initialize:
                 turn = 0;
                 var msg = playerGroup.member.name + "is ready for battle! HP: " + playerGroup.member.Hp;
                 windowBattleLog.AddText(msg, false);
                 msg = "A " + enemyGroup.member.name + " draws near! HP: " + enemyGroup.member.Hp;
                 windowBattleLog.AddText(msg);
-                ChangeState(BattleState.WaitCommand);
+                ChangeState(BattlePhase.WaitCommand);
                 break;
-            case state.WaitCommand:
+            case BattlePhase.WaitCommand:
                 if(Input.GetButtonDown("Submit"))
                 {
                     windowBattleLog.ClearText();
-                    ChangeState(BattleState.Executing);
+                    ChangeState(BattlePhase.Execute);
                 }
                 break;
-            case state.Executing:
-                Character attacker, target;
-                attacker = enemyGroup.member;
-                target = playerGroup.member;
-                attacker.command.Execute(target);
+            case BattlePhase.ChooseCommand:
+                windowBattleCommand.ManualUpdate();
+                if(Input.GetButtonDown("Submit"))
+                {
+                    var cmd = playerGroup.member.commands[windowBattleCommand.current];
+                    cmd.SetTarget(enemyGroup.member);
+                    commands.Add(cmd);
 
-                var msg2 = attacker.name + "uses " + attacker.command.name;
-                windowBattleLog.AddText(msg2, false);
-                windowBattleLog.AddText(msg2);
+                    cmd = enemyGroup.member.commands[0];
+                    cmd.SetTarget(playerGroup.member);
+                    cmd.shakeEffect = true;
+                    commands.Add(cmd);
 
-                attacker = playerGroup.member;
-                target = enemyGroup.member;
-                attacker.command.Execute(target);
-
-                msg2 = attacker.name + " uses " + attacker.command.name;
-                windowBattleLog.AddText(msg2);
-                msg2 = target.name + " took " + attacjer.command.value + "damage. HP droppped to " + target.Hp;
-                windowBattleLog.AddText(msg2);
-
-                state = enemyGroup.Dead() ? BattleState.Result : BattleState.WaitCommand;
+                    phase = BattlePhase.Execute;
+                    windowBattleCommand.Close();
+                }
+                break;
+            case BattlePhase.Execute:
+                if (executionCoroutine == null)
+                {
+                    executionCoroutine = StartCoroutine(Execute());
+                }
                 break;
 
-            case state.Result:
+            case BattlePhase.Result:
                 if (Input.GetButtonDown("Submit"))
                 {
                     windowBattleLog.AddText("");
@@ -79,8 +96,10 @@ public class Battle : monoBehaviour
                     windowBattleLog.AddText(vocab.Exp(enemyGroup.member.exp));
                     windowBattleLog.AddText(vocab.Gold(enemyGroup.member.gold));
                     windowBattleLog.AddText("");
-                    ChangeState(state.End);
+                    ChangeState(BattlePhase.End);
                 }
+                break;
+            case BattlePhase.End:
                 break;
         }
     }
@@ -90,5 +109,71 @@ public class Battle : monoBehaviour
         windowBattleLog.Open();
         windowBattleLog.ClearText();
 
-    }    
+    }  
+
+    private void CreateBattleCommand()
+    {
+        windowBattleCommand.Initialize();
+    }
+
+    private void ChangeState(BattlePhase phase)
+    {
+        this.phase = phase;
+    }
+
+    private IEnumerator Execute()
+    {
+        while (commands.Count > 0)
+        {
+            var cmd = commands[0] as windowBattleCommand;
+            commands.RemoveAt(0);
+            windowBattleLog.AddText(cmd.useMessage);
+            yield return WaitMessage();
+            if(cmd.success) yield return ScreenShakeEffect();
+            windowBattleLog.AddText(cmd.resultMessage);
+            yield return WaitMessage();
+            windowBattleLog.Breakline();
+
+            if(IsBattleOver())
+            {
+                phase = BattlePhase.Result;
+                yield break;
+            }
+            else if(cmd is CommandEscape)
+            {
+                if(cmd.success)
+                {
+                    phase = BattlePhase.End;
+                    yield break;
+                }
+                
+            }
+            windowPlayerStatus.SetHP(playerGroup.member.Hp);
+        }
+
+        executionCoroutine = null;
+
+        windowBattleLog.AddText("Command?");
+        phase = BattlePhase.ChooseCommand;
+        CreateWindowBattleCommand();
+    }  
+
+    private IEnumerator WaitMessage()
+    {
+        while(!windowBattleLog.IsIdle())
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public IEnumerator ScreenShakeEffect(float duration = 0.1f, bool waitComplete = true)
+    {
+        Transform parent = windowBattleLog.transform.parent;
+        var targetPos = parent.localPosition;
+        targetPos.x = Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1);
+        targetPos.y = Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1);
+        parent.DOLocalMove(targetPos, duration).SetLoops(4, LoopType.Yoyo);
+
+        yield return new WaitForSeconds(waitComplete ? duration : 0f);
+    }
 }
