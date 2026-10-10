@@ -12,6 +12,10 @@ public class Battle : MonoBehaviour
     private WindowBattleLog windowBattleLog;
     [SerializeField]
     private WindowBattleCommand windowBattleCommand;
+   // begin update
+    [SerializeField]
+    private WindowPlayerStatus windowPlayerStatus;
+    // end update
     private Vocab vocab;
     private Coroutine executionCoroutine;
     private List<Command> commands = new List<Command>();
@@ -124,8 +128,10 @@ public class Battle : MonoBehaviour
     private IEnumerator Execute()
     {
         while (commands.Count > 0)
-        {
-            var cmd = commands[0] as windowBattleCommand;
+        { 
+            // begin update. Original: var cmd = commands[0]
+            Command cmd = commands[0];
+            // end update
             commands.RemoveAt(0);
             windowBattleLog.AddText(cmd.useMessage);
             yield return WaitMessage();
@@ -157,7 +163,14 @@ public class Battle : MonoBehaviour
         phase = BattlePhase.ChooseCommand;
         CreateWindowBattleCommand();
     }  
+// begin update. i think you were missing this method
+    private bool IsBattleOver()
+    {
+        return enemyGroup.Dead() || playerGroup.Dead();
+    }
+// end update
 
+    }
     private IEnumerator WaitMessage()
     {
         while(!windowBattleLog.IsIdle())
