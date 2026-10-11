@@ -45,6 +45,7 @@ public class Battle : MonoBehaviour
     {
         commands.Clear();
         CreateWindowBattleLog();
+        CreateWindowPlayerStatus();
         ChangeState(BattlePhase.Initialize);
     }
 
@@ -115,11 +116,18 @@ public class Battle : MonoBehaviour
 
     }  
 
-    private void CreateBattleCommand()
+    private void CreateWindowBattleCommand()
     {
+        windowBattleCommand.gameObject.SetActive(true);
         windowBattleCommand.Initialize();
     }
 
+    private void CreateWindowPlayerStatus()
+    {
+        windowPlayerStatus.gameObject.SetActive(true);
+        windowPlayerStatus.Initialize();
+        windowPlayerStatus.SetStatus(playerGroup.member);
+    }
     private void ChangeState(BattlePhase phase)
     {
         this.phase = phase;
@@ -142,6 +150,7 @@ public class Battle : MonoBehaviour
 
             if(IsBattleOver())
             {
+                executionCoroutine = null;
                 phase = BattlePhase.Result;
                 yield break;
             }
@@ -149,6 +158,7 @@ public class Battle : MonoBehaviour
             {
                 if(cmd.success)
                 {
+                    executionCoroutine = null;
                     phase = BattlePhase.End;
                     yield break;
                 }
@@ -170,7 +180,6 @@ public class Battle : MonoBehaviour
     }
 // end update
 
-    }
     private IEnumerator WaitMessage()
     {
         while(!windowBattleLog.IsIdle())

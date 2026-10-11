@@ -19,7 +19,7 @@ public class Command
         this.value = value;
     }
 
-    public SetUser(Character user)
+    public void SetUser(Character user)
     {
         this.user = user;
     }

@@ -1,10 +1,9 @@
 public class Character
 {
-    public string name{get; private set;}
+    public string name { get; private set; }
 
-    public int strength{get; private set;}
-
-    public int agility{get; private set;}
+    public int strength { get; private set; }
+    public int agility { get; private set; }
 
     private int hp;
     private int maxHP;
@@ -12,42 +11,47 @@ public class Character
     private int mp;
     private int maxMP;
 
-    public int exp;
-    public int level{get; private set;}
+    public int exp { get; private set; }
+    public int level { get; private set; }
     public int gold;
-    
+
     public int Hp
     {
-        get
-        {
-            return hp;
-        }
-
-        set
-        {
-            hp = value;
-            if (hp < 0) hp = 0;
-        }
+        get { return hp; }
+        set { hp = UnityEngine.Mathf.Clamp(value, 0, maxHP); }
     }
 
-    public int mp{get; private set;}
-    public int exp{get; private set;}
-    public int level{get; private set;}
+    public int MaxHP { get { return maxHP; } }
+    public int Mp { get { return mp; } }
+    public int MaxMP { get { return maxMP; } }
 
-    public Command command{get; private set;}
+    public Command command { get; private set; }
 
-    public Character(string name = "char", int hp = 10, int mp = 5, int level = 1)
+    public Character(
+        string name = "char",
+        int hp = 10,
+        int mp = 5,
+        int level = 1)
     {
         this.name = name;
+
+        this.maxHP = hp;
         this.hp = hp;
+
+        this.maxMP = mp;
         this.mp = mp;
+
         this.level = level;
         this.exp = 0;
+
+        this.strength = 0;
+        this.agility = 0;
+        this.gold = 0;
     }
 
     public Command AddCommand(string name = "Attack", int value = 1)
     {
-        command atkCmd = new command(name, value);
+        Command atkCmd = new Command(name, value);
         command = atkCmd;
 
         return atkCmd;
