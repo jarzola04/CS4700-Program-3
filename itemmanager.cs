@@ -58,7 +58,28 @@ public class InventoryManager : MonoBehaviour
         onInventoryChangedCallback?.Invoke();
         return true;
     }
+public void UseItem(ItemData itemToUse)
+{
+    // Find the item in the slots
+    foreach (var slot in slots)
+    {
+        if (slot.item == itemToUse)
+        {
+            // Check if it's a Torch
+            if (slot.item.itemName == "Torch")
+            {
+                // I need to call Ethan's darkness system here but I'm not sure how
 
+                // Remove one torch from the inventory
+                RemoveItem(slot.item);
+                Debug.Log("Torch used!");
+                return;
+            }
+            
+            // We can add other consumable checks here if we decide to add other sutff like herbs
+        }
+    }
+}
     public void RemoveItem(ItemData itemToRemove)
     {
         foreach (var slot in slots)
