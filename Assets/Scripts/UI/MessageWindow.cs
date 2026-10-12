@@ -12,6 +12,8 @@ public class MessageWindow : MonoBehaviour
     [SerializeField] RectTransform moreCursor; // optional; visual
     [SerializeField] float moreCursorGap = 20;
     [SerializeField] float blinkPeriod = 0.5f;  // seconds per cursor on/off cycle
+    [SerializeField] bool battleLog;  // combat behavior changes: stays open, lines append right away and presses only skip typing
+    [SerializeField] int maxLines = 8; // only takes effect for battle log
 
     readonly Queue<string> pending = new(); // messages waiting for a press
     float shown; // characters revealed so far
@@ -20,6 +22,9 @@ public class MessageWindow : MonoBehaviour
 
     // True while the window is up, includes close animation
     public static bool Busy => Instance != null && Instance.window.activeSelf;
+
+    // Text is still being revealed
+    public static bool Typing => Instance != null && WindowAnim.IsShown(Instance.window) && Instance.shown < Instance.total;
 
     void Awake()
     {
@@ -39,8 +44,21 @@ public class MessageWindow : MonoBehaviour
         Instance.Open(message);
     }
 
+    public static void Clear() // Battle log only
+    {
+        if (Instance == null) return;
+        Instance.text.text = "";
+        Instance.shown = Instance.total = 0;
+    }
+
     void Open(string message)
     {
+        if (battleLog)
+        {
+            if (!WindowAnim.IsShown(window)) WindowAnim.Open(window);
+            Append(message);
+            return;
+        }
         if (WindowAnim.IsShown(window))
         {
             pending.Enqueue(message);
@@ -56,6 +74,7 @@ public class MessageWindow : MonoBehaviour
     void Append(string message)
     {
         text.text = text.text.Length == 0 ? message : text.text + "\n" + message;
+        if (battleLog) ScrollOff();
         text.ForceMeshUpdate();
         total = text.textInfo.characterCount;
         text.maxVisibleCharacters = (int)shown;
@@ -75,6 +94,7 @@ public class MessageWindow : MonoBehaviour
         UpdateMoreCursor(shown >= total && pending.Count > 0);
 
         if (!UIController.Submit && !UIController.Cancel) return;
+        if (battleLog && !typing) return; // leave the press for Battle
         UIController.UsePress();
 
         if (typing)
@@ -88,6 +108,15 @@ public class MessageWindow : MonoBehaviour
             UpdateMoreCursor(false);
         }
         else WindowAnim.Close(window);
+    }
+
+    void ScrollOff() // Battle log only
+    {
+        string[] lines = text.text.Split('\n');
+        if (maxLines <= 0 || lines.Length <= maxLines) return;
+        string kept = string.Join("\n", lines, lines.Length - maxLines, maxLines);
+        shown = Mathf.Max(0, shown - (text.text.Length - kept.Length));
+        text.text = kept;
     }
 
     void UpdateMoreCursor(bool waiting)

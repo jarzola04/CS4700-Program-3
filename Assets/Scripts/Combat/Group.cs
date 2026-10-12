@@ -14,6 +14,13 @@ public class Group
         return ch;
     }
 
+    public Character AddCharacter(string name, int strength, int agility, int hp, int mp, int level)
+    {
+        var ch = new Character(name, strength, agility, hp, mp, level);
+        member = ch;
+        return ch;
+    }
+
     public bool Dead()
     {
         return (member.Hp == 0);

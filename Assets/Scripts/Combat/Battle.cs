@@ -9,13 +9,11 @@ public class Battle : MonoBehaviour
     public Group enemyGroup;
     public BattlePhase phase = BattlePhase.Initialize;
     [SerializeField]
-    private WindowBattleLog windowBattleLog;
+    private Transform shakeTarget; // canvas whose children ScreenShakeEffect moves; defaults to the MessageWindow's canvas
     [SerializeField]
     private WindowBattleCommand windowBattleCommand;
-   // begin update
     [SerializeField]
     private WindowPlayerStatus windowPlayerStatus;
-    // end update
     
     private Coroutine executionCoroutine;
     private List<Command> commands = new List<Command>();
@@ -33,7 +31,7 @@ public class Battle : MonoBehaviour
     void Start()
     {
         playerGroup = new Group();
-        playerGroup.AddCharacter("Alex", 20, 7, 1).AddCommand("Attack", 3);
+        playerGroup.AddCharacter(PlayerStats.Name, 20, 7, 1).AddCommand("Attack", 3);
 
         enemyGroup = new Group();
         enemyGroup.AddCharacter("Slime", 5, 0, 1).AddCommand("Bite", 1);
@@ -44,7 +42,7 @@ public class Battle : MonoBehaviour
     private void Enter()
     {
         commands.Clear();
-        CreateWindowBattleLog();
+        MessageWindow.Clear();
         CreateWindowPlayerStatus();
         ChangeState(BattlePhase.Initialize);
     }
@@ -55,23 +53,25 @@ public class Battle : MonoBehaviour
         {
             case BattlePhase.Initialize:
                 turn = 0;
-                var msg = playerGroup.member.name + "is ready for battle! HP: " + playerGroup.member.Hp;
-                windowBattleLog.AddText(msg, false);
+                var msg = playerGroup.member.name + " is ready for battle! HP: " + playerGroup.member.Hp;
+                MessageWindow.Show(msg);
                 msg = "A " + enemyGroup.member.name + " draws near! HP: " + enemyGroup.member.Hp;
-                windowBattleLog.AddText(msg);
+                MessageWindow.Show(msg);
                 ChangeState(BattlePhase.WaitCommand);
                 break;
             case BattlePhase.WaitCommand:
-                if(Input.GetButtonDown("Submit"))
+                if(UIController.Submit && !MessageWindow.Typing)
                 {
-                    windowBattleLog.ClearText();
+                    UIController.UsePress();
+                    MessageWindow.Clear();
                     ChangeState(BattlePhase.Execute);
                 }
                 break;
             case BattlePhase.ChooseCommand:
                 windowBattleCommand.ManualUpdate();
-                if(Input.GetButtonDown("Submit"))
+                if(UIController.Submit && !MessageWindow.Typing)
                 {
+                    UIController.UsePress();
                     var cmd = playerGroup.member.command;
                     cmd.SetTarget(enemyGroup.member);
                     commands.Add(cmd);
@@ -93,14 +93,15 @@ public class Battle : MonoBehaviour
                 break;
 
             case BattlePhase.Result:
-                if (Input.GetButtonDown("Submit"))
+                if(UIController.Submit && !MessageWindow.Typing)
                 {
-                    windowBattleLog.AddText("");
-                    windowBattleLog.AddText(Vocab.Victory(enemyGroup.member.name));
-                    windowBattleLog.AddText("");
-                    windowBattleLog.AddText(Vocab.Exp(enemyGroup.member.exp));
-                    windowBattleLog.AddText(Vocab.Gold(enemyGroup.member.gold));
-                    windowBattleLog.AddText("");
+                    UIController.UsePress();
+                    MessageWindow.Show("");
+                    MessageWindow.Show(Vocab.Victory(enemyGroup.member.name));
+                    MessageWindow.Show("");
+                    MessageWindow.Show(Vocab.Exp(enemyGroup.member.exp));
+                    MessageWindow.Show(Vocab.Gold(enemyGroup.member.gold));
+                    MessageWindow.Show("");
                     ChangeState(BattlePhase.End);
                 }
                 break;
@@ -109,21 +110,14 @@ public class Battle : MonoBehaviour
         }
     }
 
-    private void CreateWindowBattleLog()
-    {
-        windowBattleLog.Open();
-        windowBattleLog.ClearText();
-
-    }  
-
     private void CreateWindowBattleCommand()
     {
-        windowBattleCommand.gameObject.SetActive(true);
-        windowBattleCommand.Initialize();
+        windowBattleCommand.Open();
     }
 
     private void CreateWindowPlayerStatus()
     {
+        if (windowPlayerStatus == null) return;
         windowPlayerStatus.gameObject.SetActive(true);
         windowPlayerStatus.Initialize();
         windowPlayerStatus.SetStatus(playerGroup.member);
@@ -137,16 +131,14 @@ public class Battle : MonoBehaviour
     {
         while (commands.Count > 0)
         { 
-            // begin update. Original: var cmd = commands[0]
             Command cmd = commands[0];
-            // end update
             commands.RemoveAt(0);
-            windowBattleLog.AddText(cmd.useMessage);
+            MessageWindow.Show(cmd.useMessage);
             yield return WaitMessage();
             if(cmd.success) yield return ScreenShakeEffect();
-            windowBattleLog.AddText(cmd.resultMessage);
+            MessageWindow.Show(cmd.resultMessage);
             yield return WaitMessage();
-            windowBattleLog.Breakline();
+            MessageWindow.Show("");
 
             if(IsBattleOver())
             {
@@ -164,37 +156,40 @@ public class Battle : MonoBehaviour
                 }
                 
             }
-            windowPlayerStatus.SetHP(playerGroup.member.Hp);
+            if (windowPlayerStatus != null) windowPlayerStatus.SetHP(playerGroup.member.Hp);
         }
 
         executionCoroutine = null;
 
-        windowBattleLog.AddText("Command?");
+        MessageWindow.Show("Command?");
         phase = BattlePhase.ChooseCommand;
         CreateWindowBattleCommand();
     }  
-// begin update. i think you were missing this method
     private bool IsBattleOver()
     {
         return enemyGroup.Dead() || playerGroup.Dead();
     }
-// end update
 
     private IEnumerator WaitMessage()
     {
-        while(!windowBattleLog.IsIdle())
+        while(MessageWindow.Typing)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
     }
 
     public IEnumerator ScreenShakeEffect(float duration = 0.1f, bool waitComplete = true)
     {
-        Transform parent = windowBattleLog.transform.parent;
-        var targetPos = parent.localPosition;
-        targetPos.x = Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1);
-        targetPos.y = Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1);
-        parent.DOLocalMove(targetPos, duration).SetLoops(4, LoopType.Yoyo);
+        if (shakeTarget == null && MessageWindow.Instance != null)
+            shakeTarget = MessageWindow.Instance.GetComponentInParent<Canvas>().rootCanvas.transform;
+        if (shakeTarget == null) yield break;
+
+        // An overlay canvas's own transform is locked, so shake everything on it together
+        var offset = new Vector3(
+            Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1),
+            Random.Range(2, 4) * (Random.Range(0, 100) > 50 ? -1 : 1));
+        foreach (Transform child in shakeTarget)
+            child.DOLocalMove(child.localPosition + offset, duration).SetLoops(4, LoopType.Yoyo);
 
         yield return new WaitForSeconds(waitComplete ? duration : 0f);
     }

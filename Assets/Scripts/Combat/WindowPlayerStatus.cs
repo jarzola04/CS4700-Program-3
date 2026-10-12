@@ -1,20 +1,12 @@
 using UnityEngine;
 using TMPro;
 
+// same as StatusWindow's mini status but I don't wanna change that one
 public class WindowPlayerStatus : WindowBase
 {
-    [Header("Player Status Text")]
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text hpText;
-    [SerializeField] private TMP_Text mpText;
-    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text labels, values;
 
     private Character character;
-
-    public override void Initialize()
-    {
-        base.Initialize();
-    }
 
     public void SetStatus(Character character)
     {
@@ -22,26 +14,20 @@ public class WindowPlayerStatus : WindowBase
             return;
 
         this.character = character;
-
-        nameText.text = character.name;
-        hpText.text = $"HP {character.Hp}/{character.MaxHP}";
-        mpText.text = $"MP {character.Mp}/{character.MaxMP}";
-        levelText.text = $"Lv {character.level}";
+        Refresh();
     }
 
-    public void SetHP(int hp)
+    // Values are read from the character, so these redraw
+    // don't wanna rewrite combat
+    public void SetHP(int hp) => Refresh();
+    public void SetMP(int mp) => Refresh();
+
+    private void Refresh()
     {
         if (character == null)
             return;
 
-        hpText.text = $"HP {hp}/{character.MaxHP}";
-    }
-
-    public void SetMP(int mp)
-    {
-        if (character == null)
-            return;
-
-        mpText.text = $"MP {mp}/{character.MaxMP}";
+        labels.text = $"\nLV\nHP\nMP\nG\nE";
+        values.text = $"\n{character.level}\n{character.Hp}\n{character.Mp}\n{character.gold}\n{character.exp}";
     }
 }

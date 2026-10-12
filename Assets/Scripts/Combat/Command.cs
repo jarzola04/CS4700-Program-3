@@ -11,6 +11,9 @@ public class Command
     public string useMessage {get; protected set;}
     public string resultMessage {get; protected set;}
 
+    private string useTemplate;
+    private string resultTemplate;
+
     public bool success {get; protected set;}
     public bool shakeEffect;
 
@@ -18,6 +21,10 @@ public class Command
     {
         this.name = name;
         this.value = value;
+        useTemplate = "{0} attacks!";
+        resultTemplate = "The {0}'s Hit Points have been reduced by {1}.";
+        useMessage = useTemplate;
+        resultMessage = resultTemplate;
     }
 
     public void SetUser(Character user)
@@ -48,6 +55,7 @@ public class Command
             {
                 min = 0;
                 max = (user.strength + 4) / 6;
+                damage = Random.Range(min, max + 1);
             }
         } 
         else
@@ -64,8 +72,8 @@ public class Command
         } 
         int targetHp = target.Hp - damage;
         target.Hp = targetHp;
-        useMessage = string.Format(useMessage, user.name);
-        resultMessage = string.Format(resultMessage, target.name, damage, targetHp);
+        useMessage = string.Format(useTemplate, user.name);
+        resultMessage = string.Format(resultTemplate, target.name, damage, targetHp);
 
         success = (damage > 0);      
     }

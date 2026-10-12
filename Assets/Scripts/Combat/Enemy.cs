@@ -1,6 +1,6 @@
 public class Enemy : Character
 {
-    public int dodge = 1 / 64;
+    public float dodge = 1f / 64;
     
     public static int UNIQUE_ID = 0;
 

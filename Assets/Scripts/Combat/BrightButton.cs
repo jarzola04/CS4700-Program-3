@@ -49,7 +49,7 @@ public class BrightButton : Button, ISelectHandler, IDeselectHandler
 
     override public void OnDeselect(BaseEventData eventData)
     {
-        base.OnSelect(eventData);
+        base.OnDeselect(eventData);
 
         if(!IsActive() || !IsInteractable())
             return;

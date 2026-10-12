@@ -59,6 +59,7 @@ public class Character
     public Command AddCommand(string name = "Attack", int value = 1)
     {
         Command atkCmd = new Command(name, value);
+        atkCmd.SetUser(this);
         command = atkCmd;
 
         return atkCmd;

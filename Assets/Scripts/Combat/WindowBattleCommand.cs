@@ -1,83 +1,67 @@
+using TMPro;
 using UnityEngine;
 
+// FIGHT / RUN / SPELL / ITEM grid, drawn like the overworld CommandMenu
 public class WindowBattleCommand : WindowBase
 {
-    [SerializeField] private Transform arrow;
-    [SerializeField] private BrightButton[] options;
-    [SerializeField] private BrightButton outsideArea;
+    [SerializeField] private GameObject window;
+    [SerializeField] private RectTransform cursor;
+    [SerializeField] private RectTransform[] slots; // column-major: FIGHT, RUN, SPELL, ITEM
+    [SerializeField] private int rows = 2;
+    [SerializeField] private float cursorGap = 4;
+    [SerializeField] private float blinkPeriod = 0.5f;
 
-    private bool listenersInitialized = false;
+    private int row, col;
+    private Vector2Int lastDir;
+    private MenuCursor menuCursor;
 
-    public int current{get; private set;}
+    private MenuCursor Pointer => menuCursor ??= new MenuCursor(cursor, blinkPeriod);
+
+    public int current => col * rows + row;
+
+    private void Awake()
+    {
+        window.SetActive(false);
+    }
 
     public override void Initialize()
     {
         base.Initialize();
-
-        current = 0;
-
-        if (!listenersInitialized)
-        {
-            for (int i = 0; i < options.Length; i++)
-            {
-                options[i].id = i;
-                options[i].onSelect.AddListener(OnOptionSelected);
-            }
-
-            outsideArea.onClick.AddListener(OnClickOutsideArea);
-            listenersInitialized = true;
-        }
-
-        if (options.Length > 0)
-        {
-            UpdateArrow();
-        }
+        row = col = 0;
+        lastDir = InputDirection.Cardinal(UIController.Navigate);
     }
 
-    public void ManualUpdate()
+    public override void Open()
     {
-        if (options.Length == 0)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            current++;
-
-            if (current >= options.Length)
-                current = 0;
-
-            UpdateArrow();
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            current--;
-
-            if (current < 0)
-                current = options.Length - 1;
-
-            UpdateArrow();
-        }
+        Initialize();
+        window.transform.SetAsLastSibling();
+        WindowAnim.Open(window);
+        MoveCursor();
     }
 
     public override void Close()
     {
-        gameObject.SetActive(false);
+        WindowAnim.Close(window);
     }
 
-    private void UpdateArrow()
+    public void ManualUpdate()
     {
-        arrow.SetParent(options[current].transform, false);
-        arrow.localPosition = new Vector3(-60f, 0f, 0f);
+        Vector2Int dir = InputDirection.Cardinal(UIController.Navigate);
+        if (dir != lastDir && dir != Vector2Int.zero)
+        {
+            int cols = (slots.Length + rows - 1) / rows;
+            if (dir.y != 0) row = (row - dir.y + rows) % rows; // up = -row
+            else col = (col + dir.x + cols) % cols;
+            MoveCursor();
+        }
+        lastDir = dir;
     }
 
-    private void OnClickOutsideArea() {}
-
-    private void OnOptionSelected(int buttonID)
+    private void LateUpdate()
     {
-        if (buttonID < 0 || buttonID >= options.Length)
-            return;
-
-        current = buttonID;
-        UpdateArrow();
+        if (!WindowAnim.IsShown(window)) return;
+        Pointer.Apply(MessageWindow.Typing ? CursorBlink.State.Solid : CursorBlink.State.Blink);
     }
+
+    private void MoveCursor() => Pointer.PointAt(slots[current].GetComponent<TMP_Text>(), cursorGap);
 }
