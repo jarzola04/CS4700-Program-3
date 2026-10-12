@@ -31,10 +31,10 @@ public class Battle : MonoBehaviour
     void Start()
     {
         playerGroup = new Group();
-        playerGroup.AddCharacter(PlayerStats.Name, 20, 7, 1).AddCommand("Attack", 3);
+        playerGroup.AddCharacter(PlayerStats.Name, PlayerStats.Strength, PlayerStats.Agility, PlayerStats.MaxHP, PlayerStats.MaxMP, PlayerStats.Level).AddCommand("Attack", 3);
 
         enemyGroup = new Group();
-        enemyGroup.AddCharacter("Slime", 5, 0, 1).AddCommand("Bite", 1);
+        enemyGroup.AddCharacter("Slime", 5, 3, 5, 0, 1).AddCommand("Bite", 1);
 
         Enter();
     }
@@ -133,6 +133,7 @@ public class Battle : MonoBehaviour
         { 
             Command cmd = commands[0];
             commands.RemoveAt(0);
+            cmd.Execute();
             MessageWindow.Show(cmd.useMessage);
             yield return WaitMessage();
             if(cmd.success) yield return ScreenShakeEffect();
