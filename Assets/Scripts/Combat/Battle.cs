@@ -26,6 +26,7 @@ public class Battle : MonoBehaviour
     public static bool Active { get; private set; }
     public static event System.Action Ended;
     private static EnemyData pending;
+    private static bool reserved;
     private bool launched;
     [SerializeField]
     private WindowPlayerStatus windowPlayerStatus;
@@ -45,10 +46,18 @@ public class Battle : MonoBehaviour
         End
     }
 
+    // Marks a battle as coming (blocks input and encounters) while a transition plays
+    public static void Reserve()
+    {
+        Active = true;
+        reserved = true;
+    }
+
     public static void Begin(EnemyData enemy)
     {
-        if (Active) return;
+        if (Active && !reserved) return;
         Active = true;
+        reserved = false;
         pending = enemy;
         SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
     }

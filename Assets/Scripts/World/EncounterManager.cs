@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -8,6 +9,7 @@ public class EncounterManager : MonoBehaviour
     [SerializeField] EnemyData[] enemies;
     [SerializeField] AudioSource music;   // this should be set to overworld music
     [SerializeField] AudioClip battleMusic;
+    [SerializeField] DarknessManager darkness; // for battle transition animation
 
     AudioResource fieldMusic;
     float fieldTime;
@@ -16,6 +18,7 @@ public class EncounterManager : MonoBehaviour
     void OnEnable()
     {
         if (mover == null) mover = FindAnyObjectByType<PlayerMovement>();
+        if (darkness == null) darkness = FindAnyObjectByType<DarknessManager>();
         if (mover != null) mover.Stepped += OnStepped;
         else Debug.LogWarning("EncounterManager: no PlayerMovement found, encounters disabled", this);
         Battle.Ended += OnBattleEnded;
@@ -32,16 +35,26 @@ public class EncounterManager : MonoBehaviour
         if (Battle.Active || enemies.Length == 0) return;
         if (Random.Range(0, EncounterOdds) != 0) return;
 
-        Battle.Begin(enemies[Random.Range(0, enemies.Length)]);
-        if (music == null || battleMusic == null) return;
-        fieldMusic = music.resource;
-        fieldTime = music.time;
-        music.resource = battleMusic;
-        music.Play();
+        Battle.Reserve();
+        StartCoroutine(StartBattle(enemies[Random.Range(0, enemies.Length)]));
+    }
+
+    IEnumerator StartBattle(EnemyData enemy)
+    {
+        if (music != null && battleMusic != null)
+        {
+            fieldMusic = music.resource;
+            fieldTime = music.time;
+            music.resource = battleMusic;
+            music.Play();
+        }
+        if (DarkPlace.IsDark && darkness != null) yield return darkness.CloseIn();
+        Battle.Begin(enemy);
     }
 
     void OnBattleEnded()
     {
+        if (darkness != null) darkness.Reopen();
         if (music == null || fieldMusic == null) return;
         music.resource = fieldMusic;
         music.Play();

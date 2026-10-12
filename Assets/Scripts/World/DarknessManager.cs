@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,6 +12,8 @@ public class DarknessManager : MonoBehaviour
     [SerializeField, Min(0)] int torchRadius = 1;   // 3x3
     [SerializeField, Min(0)] int radiantRadius = 3; // 7x7
     [SerializeField, Min(1)] int radiantStepsPerShrink = 60;
+    [SerializeField, Min(0f)] float closeInStepTime = 0.08f; // for battle transition
+    [SerializeField, Min(0f)] float blackoutHold = 0.3f;
 
     readonly Dictionary<Vector3Int, TileBase> cleared = new();
     Vector3Int lastCell;
@@ -19,6 +22,8 @@ public class DarknessManager : MonoBehaviour
                       // technically in Dragon Warriors I think the first ring
                       // has longer lifespan but who cares
     PlayerMovement mover;
+    bool closedIn;   // battle transition finished, everything is dark
+    int savedRadius;
 
     public int Radius
     {
@@ -36,6 +41,28 @@ public class DarknessManager : MonoBehaviour
     {
         Radius = radiantRadius;
         radiantSteps = radiantStepsPerShrink;
+    }
+
+    public IEnumerator CloseIn() // battle transition
+    {
+        savedRadius = radius;
+        for (int r = radius - 1; r >= 0; r--)
+        {
+            radius = r;
+            yield return new WaitForSeconds(closeInStepTime);
+        }
+        closedIn = true;
+        Restore();
+        yield return new WaitForSeconds(blackoutHold);
+    }
+
+    // Undoes CloseIn once the battle is over
+    public void Reopen()
+    {
+        if (!closedIn) return;
+        closedIn = false;
+        radius = savedRadius;
+        lastRadius = -1;
     }
 
     void OnEnable()
@@ -75,7 +102,7 @@ public class DarknessManager : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!DarkPlace.IsDark) return;
+        if (!DarkPlace.IsDark || closedIn) return;
 
         Vector3Int cell = darkness.WorldToCell(player.position);
         if (cell == lastCell && radius == lastRadius) return;
