@@ -297,6 +297,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 83d88648a8c046f9a568ea2457e58d4d, type: 2}
   - {fileID: 11400000, guid: 07efbd415ce4421f83bffbe9b722b2ff, type: 2}
   - {fileID: 11400000, guid: 07efbd415ce4421f83bffbe9b722b2ff, type: 2}
+  music: {fileID: 1717707758}
+  battleMusic: {fileID: 8300000, guid: 9bf1fc77b5e36b03ea4c95569e925b05, type: 3}
 --- !u!1001 &1127967613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -107035,8 +107037,8 @@ GameObject:
   - component: {fileID: 1717707753}
   - component: {fileID: 1717707752}
   - component: {fileID: 1717707755}
-  - component: {fileID: 1717707756}
   - component: {fileID: 1717707757}
+  - component: {fileID: 1717707758}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -107080,9 +107082,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0.00090826524
-    y: 0
+    y: 0.0024009603
     width: 0.99727523
-    height: 1
+    height: 0.9939976
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -107162,7 +107164,31 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!82 &1717707756
+--- !u!114 &1717707757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717707751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
+  m_ComponentVersion: 1
+  m_AssetsPPU: 16
+  m_RefResolutionX: 320
+  m_RefResolutionY: 180
+  m_CropFrame: 0
+  m_GridSnapping: 2
+  m_FilterMode: 0
+  m_UpscaleRT: 0
+  m_PixelSnapping: 0
+  m_CropFrameX: 0
+  m_CropFrameY: 0
+  m_StretchFill: 0
+--- !u!82 &1717707758
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107175,9 +107201,9 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: e26369d9e004dbb169551f4eccace7d4, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -107259,30 +107285,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1717707757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1717707751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
-  m_ComponentVersion: 1
-  m_AssetsPPU: 16
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
-  m_CropFrame: 0
-  m_GridSnapping: 2
-  m_FilterMode: 0
-  m_UpscaleRT: 0
-  m_PixelSnapping: 0
-  m_CropFrameX: 0
-  m_CropFrameY: 0
-  m_StretchFill: 0
 --- !u!1 &1769181192
 GameObject:
   m_ObjectHideFlags: 0

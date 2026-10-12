@@ -24,6 +24,7 @@ public class Battle : MonoBehaviour
     private const string SceneName = "Combat";
 
     public static bool Active { get; private set; }
+    public static event System.Action Ended;
     private static EnemyData pending;
     private bool launched;
     [SerializeField]
@@ -64,6 +65,7 @@ public class Battle : MonoBehaviour
     void OnDestroy()
     {
         Active = false;
+        if (launched) Ended?.Invoke();
     }
 
     private void Finish()

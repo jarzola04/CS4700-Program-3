@@ -1,10 +1,16 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 // Rolls for a random encounter after every step the player takes
 public class EncounterManager : MonoBehaviour
 {
     [SerializeField] PlayerMovement mover;
     [SerializeField] EnemyData[] enemies;
+    [SerializeField] AudioSource music;   // this should be set to overworld music
+    [SerializeField] AudioClip battleMusic;
+
+    AudioResource fieldMusic;
+    float fieldTime;
     const int EncounterOdds = 16; // 1 in 16 per step
 
     void OnEnable()
@@ -12,11 +18,13 @@ public class EncounterManager : MonoBehaviour
         if (mover == null) mover = FindAnyObjectByType<PlayerMovement>();
         if (mover != null) mover.Stepped += OnStepped;
         else Debug.LogWarning("EncounterManager: no PlayerMovement found, encounters disabled", this);
+        Battle.Ended += OnBattleEnded;
     }
 
     void OnDisable()
     {
         if (mover != null) mover.Stepped -= OnStepped;
+        Battle.Ended -= OnBattleEnded;
     }
 
     void OnStepped()
@@ -25,5 +33,19 @@ public class EncounterManager : MonoBehaviour
         if (Random.Range(0, EncounterOdds) != 0) return;
 
         Battle.Begin(enemies[Random.Range(0, enemies.Length)]);
+        if (music == null || battleMusic == null) return;
+        fieldMusic = music.resource;
+        fieldTime = music.time;
+        music.resource = battleMusic;
+        music.Play();
+    }
+
+    void OnBattleEnded()
+    {
+        if (music == null || fieldMusic == null) return;
+        music.resource = fieldMusic;
+        music.Play();
+        music.time = fieldTime;
+        fieldMusic = null;
     }
 }
