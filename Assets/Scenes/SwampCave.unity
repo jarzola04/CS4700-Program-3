@@ -266,6 +266,8 @@ MonoBehaviour:
   torchRadius: 1
   radiantRadius: 3
   radiantStepsPerShrink: 60
+  closeInStepTime: 0.08
+  blackoutHold: 0.3
 --- !u!114 &632939448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +301,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 07efbd415ce4421f83bffbe9b722b2ff, type: 2}
   music: {fileID: 1717707758}
   battleMusic: {fileID: 8300000, guid: 9bf1fc77b5e36b03ea4c95569e925b05, type: 3}
+  encounterSfx: {fileID: 8300000, guid: 76c8aa1e7178b29f5a1079eb5bd32814, type: 3}
+  darkness: {fileID: 632939447}
 --- !u!1001 &1127967613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -107082,9 +107086,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0.00090826524
-    y: 0.0024009603
+    y: 0.0028328612
     width: 0.99727523
-    height: 0.9939976
+    height: 0.9943343
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

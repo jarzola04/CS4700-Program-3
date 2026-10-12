@@ -9,6 +9,7 @@ public class EncounterManager : MonoBehaviour
     [SerializeField] EnemyData[] enemies;
     [SerializeField] AudioSource music;   // this should be set to overworld music
     [SerializeField] AudioClip battleMusic;
+    [SerializeField] AudioClip encounterSfx;
     [SerializeField] DarknessManager darkness; // for battle transition animation
 
     AudioResource fieldMusic;
@@ -36,6 +37,7 @@ public class EncounterManager : MonoBehaviour
         if (Random.Range(0, EncounterOdds) != 0) return;
 
         Battle.Reserve();
+        if (encounterSfx != null) music.PlayOneShot(encounterSfx);
         StartCoroutine(StartBattle(enemies[Random.Range(0, enemies.Length)]));
     }
 
