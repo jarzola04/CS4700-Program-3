@@ -19,4 +19,6 @@ public static class Vocab
     {
         return (string.Format("The Experience \nincreases by {0}.", amount));
     }
+
+    public const string Defeat = "Thou art dead.";
 }

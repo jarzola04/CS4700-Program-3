@@ -11,6 +11,8 @@ public static class PlayerStats
         SpellNames.Outside, SpellNames.Return, SpellNames.Repel, SpellNames.HealMore,
     };
     static int mp = 99;
+    static int gold = 120;
+    static int exp = 0;
 
     public static IReadOnlyList<string> Spells => spells;
 
@@ -19,8 +21,8 @@ public static class PlayerStats
     public static int MaxHP => 15;
     public static int MP => mp;
     public static int MaxMP => 99;
-    public static int Gold => 120;
-    public static int Exp => 0;
+    public static int Gold => gold;
+    public static int Exp => exp;
     public static int Strength => 4;
     public static int Agility => 4;
     public static int Attack => Strength;    // + weapon
@@ -28,6 +30,9 @@ public static class PlayerStats
     public static string Weapon => "";       // nothing equipped
     public static string Armor => "";
     public static string Shield => "";
+
+    public static void AddGold(int amount) => gold += amount;
+    public static void AddExp(int amount) => exp += amount;
 
     public static bool TrySpendMP(int cost)
     {

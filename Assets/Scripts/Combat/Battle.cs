@@ -41,6 +41,7 @@ public class Battle : MonoBehaviour
         ChooseCommand,
         Execute,
         Result,
+        Defeat,
         End
     }
 
@@ -79,7 +80,10 @@ public class Battle : MonoBehaviour
     void Start()
     {
         playerGroup = new Group();
-        playerGroup.AddCharacter(PlayerStats.Name, PlayerStats.Strength, PlayerStats.Agility, PlayerStats.MaxHP, PlayerStats.MaxMP, PlayerStats.Level).AddCommand("Attack", 3);
+        var hero = playerGroup.AddCharacter(PlayerStats.Name, PlayerStats.Strength, PlayerStats.Agility, PlayerStats.MaxHP, PlayerStats.MaxMP, PlayerStats.Level);
+        hero.exp = PlayerStats.Exp;
+        hero.gold = PlayerStats.Gold;
+        hero.AddCommand("Attack", 3);
 
         enemyGroup = new Group();
         if (enemy != null)
@@ -155,13 +159,33 @@ public class Battle : MonoBehaviour
                 if(UIController.Submit && !MessageWindow.Typing)
                 {
                     UIController.UsePress();
+                    if (playerGroup.Dead())
+                    {
+                        MessageWindow.Show("");
+                        MessageWindow.Show(Vocab.Defeat);
+                        ChangeState(BattlePhase.Defeat);
+                        break;
+                    }
                     MessageWindow.Show("");
                     MessageWindow.Show(Vocab.Victory(enemyGroup.member.name));
                     MessageWindow.Show("");
                     MessageWindow.Show(Vocab.Exp(enemyGroup.member.exp));
                     MessageWindow.Show(Vocab.Gold(enemyGroup.member.gold));
+                    PlayerStats.AddExp(enemyGroup.member.exp);
+                    PlayerStats.AddGold(enemyGroup.member.gold);
                     MessageWindow.Show("");
                     ChangeState(BattlePhase.End);
+                }
+                break;
+            case BattlePhase.Defeat:
+                if(UIController.Submit && !MessageWindow.Typing)
+                {
+                    UIController.UsePress();
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
                 }
                 break;
             case BattlePhase.End:
