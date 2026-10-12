@@ -151,6 +151,11 @@ MonoBehaviour:
   phase: 0
   shakeTarget: {fileID: 339589956}
   windowBattleCommand: {fileID: 1538981666}
+  enemy: {fileID: 0}
+  enemyImage: {fileID: 1599433420}
+  standaloneOnly:
+  - {fileID: 349456812}
+  - {fileID: 1429457594}
   windowPlayerStatus: {fileID: 736271104}
 --- !u!4 &45827571
 Transform:
@@ -258,6 +263,22 @@ PrefabInstance:
     - target: {fileID: 4761079901660067597, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9083307654553602204, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4767363149850753615, guid: 6516ce98c73c42395a1e1462dd9d10ea, type: 3}
+    - target: {fileID: 9083307654553602204, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9083307654553602204, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9083307654553602204, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -485,6 +506,17 @@ MonoBehaviour:
   navigate: {fileID: -8784545083839296357, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   submit: {fileID: 392368643174621059, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   cancel: {fileID: 7727032971491509709, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+--- !u!114 &1599433420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9083307654553602204, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+  m_PrefabInstance: {fileID: 339589955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

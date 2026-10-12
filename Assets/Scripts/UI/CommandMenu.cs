@@ -45,7 +45,7 @@ public class CommandMenu : MonoBehaviour
 
     void Update()
     {
-        if (UIController.WindowOpen) return;
+        if (UIController.WindowOpen || Battle.Active) return;
         if (closingDue)
         {
             closingDue = false;

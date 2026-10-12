@@ -19,6 +19,7 @@ public class MessageWindow : MonoBehaviour
     float shown; // characters revealed so far
     int total;   // characters in the window's text
     CursorBlink moreBlink;
+    MessageWindow previous; // restored when a battle scene loaded on top unloads
 
     // True while the window is up, includes close animation
     public static bool Busy => Instance != null && Instance.window.activeSelf;
@@ -28,10 +29,16 @@ public class MessageWindow : MonoBehaviour
 
     void Awake()
     {
+        previous = Instance;
         Instance = this;
         window.SetActive(false);
         if (moreCursor != null) moreBlink = new CursorBlink(moreCursor, blinkPeriod);
         UpdateMoreCursor(false);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = previous;
     }
 
     public static void Show(string message)

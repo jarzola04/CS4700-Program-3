@@ -17,7 +17,7 @@ public class UIController : MonoBehaviour
     public static bool WindowOpen => MessageWindow.Busy || StatusWindow.Busy;
 
     // Anything the player has to wait on
-    public static bool Blocking => (Instance != null && Instance.MenuOpen) || WindowOpen;
+    public static bool Blocking => (Instance != null && Instance.MenuOpen) || WindowOpen || Battle.Active;
 
     public static Vector2 Navigate => Instance.navigate.action.ReadValue<Vector2>();
 
@@ -28,5 +28,13 @@ public class UIController : MonoBehaviour
 
     static bool Unused => Instance.usedFrame != Time.frameCount;
 
-    void Awake() => Instance = this;
+    void Awake()
+    {
+        if (Instance == null) Instance = this; // only one active at a time
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
 }

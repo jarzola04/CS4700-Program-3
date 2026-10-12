@@ -291,6 +291,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EncounterManager
   mover: {fileID: 1230436914}
+  enemies:
+  - {fileID: 11400000, guid: a9b17cf5f46d42fa87efc29eb4ddf3cb, type: 2}
+  - {fileID: 11400000, guid: da213f281f8042358c08cc79521f15f1, type: 2}
+  - {fileID: 11400000, guid: 83d88648a8c046f9a568ea2457e58d4d, type: 2}
+  - {fileID: 11400000, guid: 07efbd415ce4421f83bffbe9b722b2ff, type: 2}
+  - {fileID: 11400000, guid: 07efbd415ce4421f83bffbe9b722b2ff, type: 2}
 --- !u!1001 &1127967613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -412,13 +418,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2752577657335154148, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
-      propertyPath: miniSize.y
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 2752577657335154148, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1230436914}
+    - target: {fileID: 2752577657335154148, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: miniSize.y
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 3558191007474161874, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
       propertyPath: player
       value: 
@@ -472,13 +478,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1244543087}
     - target: {fileID: 7301533437614909241, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
-      propertyPath: darkness
-      value: 
-      objectReference: {fileID: 632939447}
-    - target: {fileID: 7301533437614909241, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1230436914}
+    - target: {fileID: 7301533437614909241, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: darkness
+      value: 
+      objectReference: {fileID: 632939447}
     - target: {fileID: 8009033953001573616, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
       propertyPath: m_lineSpacing
       value: 100
@@ -487,6 +493,18 @@ PrefabInstance:
       propertyPath: m_characterSpacing
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8455572086997573604, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: floor
+      value: 
+      objectReference: {fileID: 1244543087}
+    - target: {fileID: 8455572086997573604, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1230436914}
+    - target: {fileID: 8455572086997573604, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: darkness
+      value: 
+      objectReference: {fileID: 632939447}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -107061,9 +107079,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.00090826524
     y: 0
-    width: 1
+    width: 0.99727523
     height: 1
   near clip plane: 0.3
   far clip plane: 1000

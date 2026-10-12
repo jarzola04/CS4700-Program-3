@@ -8,9 +8,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 73201288791831029, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1714338634889972812, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
       propertyPath: m_Name
-      value: CommandMenu
+      value: OverworldCommandMenu
       objectReference: {fileID: 0}
     - target: {fileID: 6149479569356329573, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
       propertyPath: m_Pivot.x

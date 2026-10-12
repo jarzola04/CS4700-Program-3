@@ -4,8 +4,7 @@ using UnityEngine;
 public class EncounterManager : MonoBehaviour
 {
     [SerializeField] PlayerMovement mover;
-
-    static readonly string[] enemies = { "Ghost", "Magician", "Scorpion", "Druin", "Druin" };
+    [SerializeField] EnemyData[] enemies;
     const int EncounterOdds = 16; // 1 in 16 per step
 
     void OnEnable()
@@ -22,10 +21,9 @@ public class EncounterManager : MonoBehaviour
 
     void OnStepped()
     {
+        if (Battle.Active || enemies.Length == 0) return;
         if (Random.Range(0, EncounterOdds) != 0) return;
 
-        // TODO(combat): hand the enemy to the combat system once it exists.
-        string enemy = enemies[Random.Range(0, enemies.Length)];
-        MessageWindow.Show($"A {enemy} draws near!");
+        Battle.Begin(enemies[Random.Range(0, enemies.Length)]);
     }
 }

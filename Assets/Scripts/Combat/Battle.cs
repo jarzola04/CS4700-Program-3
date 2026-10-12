@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Battle : MonoBehaviour
@@ -18,6 +19,14 @@ public class Battle : MonoBehaviour
     [SerializeField]
     private Image enemyImage;
     [SerializeField]
+    private GameObject[] standaloneOnly; // camera, EventSystem
+
+    private const string SceneName = "Combat";
+
+    public static bool Active { get; private set; }
+    private static EnemyData pending;
+    private bool launched;
+    [SerializeField]
     private WindowPlayerStatus windowPlayerStatus;
     
     private Coroutine executionCoroutine;
@@ -33,6 +42,38 @@ public class Battle : MonoBehaviour
         Result,
         End
     }
+
+    public static void Begin(EnemyData enemy)
+    {
+        if (Active) return;
+        Active = true;
+        pending = enemy;
+        SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
+    }
+
+    void Awake()
+    {
+        Active = true;
+        if (pending == null) return;
+        launched = true;
+        enemy = pending;
+        pending = null;
+        foreach (var go in standaloneOnly) go.SetActive(false);
+    }
+
+    void OnDestroy()
+    {
+        Active = false;
+    }
+
+    private void Finish()
+    {
+        ChangeState(BattlePhase.Initialize);
+        enabled = false;
+        if (launched) SceneManager.UnloadSceneAsync(gameObject.scene);
+        else Active = false;
+    }
+
     void Start()
     {
         playerGroup = new Group();
@@ -122,6 +163,11 @@ public class Battle : MonoBehaviour
                 }
                 break;
             case BattlePhase.End:
+                if(UIController.Submit && !MessageWindow.Typing)
+                {
+                    UIController.UsePress();
+                    Finish();
+                }
                 break;
         }
     }

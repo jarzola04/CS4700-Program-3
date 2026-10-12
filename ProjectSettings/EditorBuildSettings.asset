@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SwampCave.unity
     guid: 7097259a937cb5ae5bb4eafdc2f39d7b
+  - enabled: 1
+    path: Assets/Scenes/Combat.unity
+    guid: 31d74b19b2be18ec4bbd643a26d41a9b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
