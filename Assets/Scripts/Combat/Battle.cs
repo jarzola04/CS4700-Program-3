@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Battle : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class Battle : MonoBehaviour
     private Transform shakeTarget; // canvas whose children ScreenShakeEffect moves; defaults to the MessageWindow's canvas
     [SerializeField]
     private WindowBattleCommand windowBattleCommand;
+    [SerializeField]
+    private EnemyData enemy;
+    [SerializeField]
+    private Image enemyImage;
     [SerializeField]
     private WindowPlayerStatus windowPlayerStatus;
     
@@ -34,7 +39,18 @@ public class Battle : MonoBehaviour
         playerGroup.AddCharacter(PlayerStats.Name, PlayerStats.Strength, PlayerStats.Agility, PlayerStats.MaxHP, PlayerStats.MaxMP, PlayerStats.Level).AddCommand("Attack", 3);
 
         enemyGroup = new Group();
-        enemyGroup.AddCharacter("Slime", 5, 3, 5, 0, 1).AddCommand("Bite", 1);
+        if (enemy != null)
+        {
+            var foe = enemyGroup.AddCharacter(enemy.EnemyName, enemy.Strength, enemy.Agility, enemy.HP, enemy.MP, 1);
+            foe.exp = enemy.Exp;
+            foe.gold = enemy.Gold;
+            foe.AddCommand("Attack", 1);
+            if (enemyImage != null) enemyImage.sprite = enemy.Sprite;
+        }
+        else // default enemy is a slime but it shouldn't be used
+        {
+            enemyGroup.AddCharacter("Slime", 5, 3, 5, 0, 1).AddCommand("Bite", 1);
+        }
 
         Enter();
     }

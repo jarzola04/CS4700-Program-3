@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f680903ef80f44f29aa655ff6fb4df99, type: 3}
+  m_Name: Druin
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Druin
+  sprite: {fileID: 3468674482338042116, guid: 704802f4b04d10173a5e71b92163899f, type: 3}
+  strength: 20
+  agility: 18
+  hp: 22
+  mp: 0
+  exp: 7
+  gold: 16

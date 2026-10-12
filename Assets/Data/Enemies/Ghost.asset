@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f680903ef80f44f29aa655ff6fb4df99, type: 3}
+  m_Name: Ghost
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Ghost
+  sprite: {fileID: 4448715427215634006, guid: a9593d2b74ead0dc8b27119ee61e101d, type: 3}
+  strength: 11
+  agility: 8
+  hp: 7
+  mp: 0
+  exp: 3
+  gold: 5

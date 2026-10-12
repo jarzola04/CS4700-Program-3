@@ -11,7 +11,7 @@ public class Character
     private int mp;
     private int maxMP;
 
-    public int exp { get; private set; }
+    public int exp { get; set; }
     public int level { get; private set; }
     public int gold;
 
