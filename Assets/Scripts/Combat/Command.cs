@@ -3,7 +3,7 @@ using UnityEngine;
 public class Command
 {
     public string name {get ; private set;}
-    public string value {get ; private set;}
+    public int value {get ; private set;}
 
     public Character user {get ; private set;}
     public Character target {get; private set;}
@@ -12,6 +12,7 @@ public class Command
     public string resultMessage {get; protected set;}
 
     public bool success {get; protected set;}
+    public bool shakeEffect;
 
     public Command (string name = "Attack", int value = 1)
     {
@@ -29,20 +30,8 @@ public class Command
         this.target = target;
     }
 
-    public virtual void Execute(Character target)
+    public virtual void Execute()
     {
-        int targetHp = target.Hp - value;
-        target.Hp = targetHp;
-
-        useMessage = string.Format("{0} uses " + name + "!", user.name);
-        resultMessage = string.Format("{0} takes {1} damage. HP: {2}", target.name, damage, targetHp);
-        success = damage > 0;
-    }
-
-    public override void Execute()
-    {
-        base.Execute();
-
         int targetDefense = (int) Mathf.Floor(target.agility / 2);
         int min, max, damage = 0;
 
@@ -80,4 +69,9 @@ public class Command
 
         success = (damage > 0);      
     }
+}
+
+public class CommandEscape : Command
+{
+    public CommandEscape() : base("Escape", 0) {}
 }

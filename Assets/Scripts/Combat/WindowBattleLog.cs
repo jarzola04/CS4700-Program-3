@@ -1,3 +1,6 @@
+using UnityEngine;
+using UnityEngine.UI;
+
 public class WindowBattleLog : WindowBase
 {
     [SerializeField] private Text textField;
@@ -15,13 +18,13 @@ public class WindowBattleLog : WindowBase
         scrollSpeed = 0.1f;
     }
 
-    public ClearText()
+    public void ClearText()
     {
         textField.text = "";
         textToAdd = "";
     }
 
-    public AddText(string text, bool breakline = true)
+    public void AddText(string text, bool breakline = true)
     {
         var invokeRunning = textToAdd.Length > 0;
 
@@ -29,6 +32,16 @@ public class WindowBattleLog : WindowBase
         textToAdd += enter + text;
 
         if(!invokeRunning) Invoke("AddToDisplay", textSpeed);
+    }
+
+    public void Breakline()
+    {
+        AddText("");
+    }
+
+    public bool IsIdle()
+    {
+        return textToAdd.Length == 0;
     }
 
     private void AddToDisplay()

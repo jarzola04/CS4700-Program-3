@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using DG.Tweening;
+using UnityEngine;
 
 public class Battle : MonoBehaviour
 {
@@ -16,12 +16,12 @@ public class Battle : MonoBehaviour
     [SerializeField]
     private WindowPlayerStatus windowPlayerStatus;
     // end update
-    private Vocab vocab;
+    
     private Coroutine executionCoroutine;
     private List<Command> commands = new List<Command>();
     private int turn;
 
-    enum BattlePhase
+    public enum BattlePhase
     {
         Initialize,
         WaitCommand,
@@ -72,11 +72,11 @@ public class Battle : MonoBehaviour
                 windowBattleCommand.ManualUpdate();
                 if(Input.GetButtonDown("Submit"))
                 {
-                    var cmd = playerGroup.member.commands[windowBattleCommand.current];
+                    var cmd = playerGroup.member.command;
                     cmd.SetTarget(enemyGroup.member);
                     commands.Add(cmd);
 
-                    cmd = enemyGroup.member.commands[0];
+                    cmd = enemyGroup.member.command;
                     cmd.SetTarget(playerGroup.member);
                     cmd.shakeEffect = true;
                     commands.Add(cmd);
@@ -96,10 +96,10 @@ public class Battle : MonoBehaviour
                 if (Input.GetButtonDown("Submit"))
                 {
                     windowBattleLog.AddText("");
-                    windowBattleLog.AddText(vocab.Victory(enemyGroup.member.name));
+                    windowBattleLog.AddText(Vocab.Victory(enemyGroup.member.name));
                     windowBattleLog.AddText("");
-                    windowBattleLog.AddText(vocab.Exp(enemyGroup.member.exp));
-                    windowBattleLog.AddText(vocab.Gold(enemyGroup.member.gold));
+                    windowBattleLog.AddText(Vocab.Exp(enemyGroup.member.exp));
+                    windowBattleLog.AddText(Vocab.Gold(enemyGroup.member.gold));
                     windowBattleLog.AddText("");
                     ChangeState(BattlePhase.End);
                 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class WindowBattleCommand : WindowBase
 {
     [SerializeField] private Transform arrow;
@@ -22,7 +24,7 @@ public class WindowBattleCommand : WindowBase
                 options[i].onSelect.AddListener(OnOptionSelected);
             }
 
-            outsideArea.OnClick.AddListener(OnClickOutsideArea);
+            outsideArea.onClick.AddListener(OnClickOutsideArea);
             listenersInitialized = true;
         }
 
@@ -30,17 +32,6 @@ public class WindowBattleCommand : WindowBase
         {
             UpdateArrow();
         }
-    }
-
-    public override void Execute()
-    {
-        useMessage = string.Format(useMessage, user.name);
-
-        if(!(user is Enemy))
-        {
-            success = (user.agility * RandomNum() > target.agility * RandomNum() * (target as Enemy).GroupFactor());
-        }
-        resultMessage = success ? successMessage : failMessage;
     }
 
     public void ManualUpdate()
@@ -68,7 +59,7 @@ public class WindowBattleCommand : WindowBase
         }
     }
 
-    public void Close()
+    public override void Close()
     {
         gameObject.SetActive(false);
     }
@@ -78,6 +69,8 @@ public class WindowBattleCommand : WindowBase
         arrow.SetParent(options[current].transform, false);
         arrow.localPosition = new Vector3(-60f, 0f, 0f);
     }
+
+    private void OnClickOutsideArea() {}
 
     private void OnOptionSelected(int buttonID)
     {

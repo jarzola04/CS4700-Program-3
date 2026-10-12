@@ -1,3 +1,9 @@
+using System;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 public class BrightButton : Button, ISelectHandler, IDeselectHandler
 {
     [Serializable]

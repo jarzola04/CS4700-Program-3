@@ -49,6 +49,13 @@ public class Character
         this.gold = 0;
     }
 
+    public Character(string name, int strength, int agility, int hp, int mp, int level)
+        : this(name, hp, mp, level)
+    {
+        this.strength = strength;
+        this.agility = agility;
+    }
+
     public Command AddCommand(string name = "Attack", int value = 1)
     {
         Command atkCmd = new Command(name, value);
