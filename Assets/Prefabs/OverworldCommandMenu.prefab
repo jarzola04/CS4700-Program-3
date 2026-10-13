@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1517375425495650800, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 311
+      objectReference: {fileID: 0}
+    - target: {fileID: 1517375425495650800, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 94
+      objectReference: {fileID: 0}
     - target: {fileID: 1714338634889972812, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
       propertyPath: m_Name
       value: OverworldCommandMenu

@@ -151,6 +151,9 @@ MonoBehaviour:
   phase: 0
   shakeTarget: {fileID: 339589956}
   windowBattleCommand: {fileID: 1538981666}
+  spellMenu: {fileID: 1375867606}
+  itemMenu: {fileID: 1988207740}
+  herb: {fileID: 0}
   enemy: {fileID: 0}
   enemyImage: {fileID: 1599433420}
   standaloneOnly:
@@ -396,6 +399,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c010a8f3cfd0cc48d8ae926efbdb8b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindowPlayerStatus
+--- !u!114 &1375867606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2626930887719522638, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+  m_PrefabInstance: {fileID: 339589955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413664e3b3f668e78b1e3a7d999e1412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ListMenu
 --- !u!1 &1429457594
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +531,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &1988207740 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5003504304753182566, guid: 8f99b007b457a7c06ad7b3872d194cdf, type: 3}
+  m_PrefabInstance: {fileID: 339589955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413664e3b3f668e78b1e3a7d999e1412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ListMenu
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

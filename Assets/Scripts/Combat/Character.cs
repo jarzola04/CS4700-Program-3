@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class Character
 {
     public string name { get; private set; }
@@ -22,8 +24,16 @@ public class Character
     }
 
     public int MaxHP { get { return maxHP; } }
-    public int Mp { get { return mp; } }
+    public int Mp
+    {
+        get { return mp; }
+        set { mp = UnityEngine.Mathf.Clamp(value, 0, maxMP); }
+    }
     public int MaxMP { get { return maxMP; } }
+
+    private readonly List<StatusEffect> statuses = new List<StatusEffect>();
+
+    public bool IsAsleep { get { return statuses.Exists(s => s.Type == StatusType.Sleep); } }
 
     public Command command { get; private set; }
 
@@ -63,5 +73,26 @@ public class Character
         command = atkCmd;
 
         return atkCmd;
+    }
+
+    public void AddStatus(StatusEffect effect)
+    {
+        statuses.RemoveAll(s => s.Type == effect.Type);
+        statuses.Add(effect);
+    }
+
+    // Decrements status durations; returns wear-off messages for expired effects.
+    public List<string> TickStatuses()
+    {
+        List<string> messages = new List<string>();
+        foreach (StatusEffect s in statuses.ToArray())
+        {
+            if (--s.Duration <= 0)
+            {
+                statuses.Remove(s);
+                messages.Add(s.WearOffMessage);
+            }
+        }
+        return messages;
     }
 }

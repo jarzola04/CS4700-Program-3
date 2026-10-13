@@ -235,6 +235,11 @@ public class Battle : MonoBehaviour
             {
                 MessageWindow.Show($"{cmd.user.name} is fast asleep!");
                 yield return WaitMessage();
+                foreach (string wake in cmd.user.TickStatuses())
+                {
+                    MessageWindow.Show(wake);
+                    yield return WaitMessage();
+                }
                 MessageWindow.Show("");
                 continue;
             }
