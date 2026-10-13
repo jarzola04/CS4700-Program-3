@@ -230,6 +230,15 @@ public class Battle : MonoBehaviour
         { 
             Command cmd = commands[0];
             commands.RemoveAt(0);
+            // begin sleep update
+            if (cmd.user.IsAsleep)
+            {
+                MessageWindow.Show($"{cmd.user.name} is fast asleep!");
+                yield return WaitMessage();
+                MessageWindow.Show("");
+                continue;
+            }
+            // end sleep update
             cmd.Execute();
             MessageWindow.Show(cmd.useMessage);
             yield return WaitMessage();
