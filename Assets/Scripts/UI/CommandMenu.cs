@@ -43,6 +43,15 @@ public class CommandMenu : MonoBehaviour
         effects = new FieldEffects(commands, darkness, torch, magicKey, radiantCost);
     }
 
+    void Start()
+    {
+        MessageWindow.Show("(WASD or arrows to move, Enter to open menu or submit, Escape to close menus)");
+        MessageWindow.Show("Hark! Darkness doth shroud this cave.");
+        MessageWindow.Show("Mine own sight must be restored. I shall cast the spell RADIANT.");
+        MessageWindow.Show("Then shall I venture south and TAKE the key from yon chest.");
+        MessageWindow.Show("With it, I shall pass through the door, slay the dragon, and save the princess!");
+    }
+
     void Update()
     {
         if (UIController.WindowOpen || Battle.Active) return;
