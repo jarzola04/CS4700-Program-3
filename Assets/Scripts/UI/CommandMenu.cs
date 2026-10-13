@@ -50,7 +50,7 @@ public class CommandMenu : MonoBehaviour
         MessageWindow.Show("Mine own sight must be restored. I shall cast the spell RADIANT.");
         MessageWindow.Show("Then shall I venture south and TAKE the key from yon chest.");
         MessageWindow.Show("With it, I shall pass through the door, slay the dragon, and save the princess!");
-        MessageWindow.Show("(Also, it'd make me really happy if you listened to the whole battle theme! It gets really good about a minute in!)");
+        MessageWindow.Show("(please listen to the battle theme until it loops i beg)");
     }
 
     void Update()
