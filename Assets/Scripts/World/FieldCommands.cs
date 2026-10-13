@@ -21,7 +21,17 @@ public class FieldCommands
 
     static bool IsTile(TileBase tile, string prefix) => tile != null && tile.name.StartsWith(prefix, StringComparison.Ordinal);
 
-    public void Talk() => MessageWindow.Show("There is no one there.");
+    public void Talk()
+    {
+        if (!IsTile(player.Walls.GetTile(player.FacingCell), "princess"))
+        {
+            MessageWindow.Show("There is no one there.");
+            return;
+        }
+        MessageWindow.Show("Princess Gwaelin: WOOF WOOF WOOF BARK BARK BARK WOOF WOOF!!");
+        MessageWindow.Show("WOOF WOOF BARK WOOF WOOF BARK BARK BARK WOOF WOOF!!!");
+        MessageWindow.Show("(You win the game!)");
+    }
 
     public void Search()
     {

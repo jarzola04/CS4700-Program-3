@@ -247,6 +247,7 @@ public class Battle : MonoBehaviour
         }
         sub = menu;
         sub.Open(entries);
+        windowBattleCommand.CursorHidden = true;
         lastDir = InputDirection.Cardinal(UIController.Navigate);
         ChangeState(BattlePhase.ChooseSub);
     }
@@ -262,6 +263,7 @@ public class Battle : MonoBehaviour
             UIController.UsePress();
             sub.Close();
             sub = null;
+            windowBattleCommand.CursorHidden = false;
             ChangeState(BattlePhase.ChooseCommand);
         }
         else if (UIController.Submit && !MessageWindow.Typing)

@@ -17,6 +17,8 @@ public class WindowBattleCommand : WindowBase
 
     private MenuCursor Pointer => menuCursor ??= new MenuCursor(cursor, blinkPeriod);
 
+    public bool CursorHidden { get; set; }
+
     public int current => col * rows + row;
 
     private void Awake()
@@ -34,6 +36,7 @@ public class WindowBattleCommand : WindowBase
     public override void Open()
     {
         Initialize();
+        CursorHidden = false;
         window.transform.SetAsLastSibling();
         WindowAnim.Open(window);
         MoveCursor();
@@ -60,7 +63,8 @@ public class WindowBattleCommand : WindowBase
     private void LateUpdate()
     {
         if (!WindowAnim.IsShown(window)) return;
-        Pointer.Apply(MessageWindow.Typing ? CursorBlink.State.Solid : CursorBlink.State.Blink);
+        Pointer.Apply(CursorHidden ? CursorBlink.State.Hidden
+            : MessageWindow.Typing ? CursorBlink.State.Solid : CursorBlink.State.Blink);
     }
 
     private void MoveCursor() => Pointer.PointAt(slots[current].GetComponent<TMP_Text>(), cursorGap);
