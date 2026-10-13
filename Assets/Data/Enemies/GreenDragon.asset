@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GreenDragon
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Green Dragon
-  sprite: {fileID: 2603548944008482188, guid: bdeebaa5a4a42341cb5a70d0b6caa1fc, type: 3}
+  sprite: {fileID: 21300000, guid: bdeebaa5a4a42341cb5a70d0b6caa1fc, type: 3}
   strength: 88
   agility: 74
   hp: 50
