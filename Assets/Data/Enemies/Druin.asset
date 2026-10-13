@@ -16,7 +16,7 @@ MonoBehaviour:
   sprite: {fileID: 3468674482338042116, guid: 704802f4b04d10173a5e71b92163899f, type: 3}
   strength: 20
   agility: 18
-  hp: 20
+  hp: 90
   mp: 0
   exp: 7
   gold: 16
