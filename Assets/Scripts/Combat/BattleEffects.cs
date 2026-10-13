@@ -44,7 +44,7 @@ public class BattleEffects
         {
             InventoryManager.Instance.RemoveItem(herb);
             int healAmount = 25; 
-            user.Hp = Mathf.Min(user.Hp + healAmount, 100); 
+            user.Hp = user.Hp + healAmount; 
         };
     }
 
@@ -61,7 +61,7 @@ public class BattleEffects
         {
             user.Mp -= healCost;
             int healAmount = 30;
-            user.Hp = Mathf.Min(user.Hp + healAmount, 100);
+            user.Hp = user.Hp + healAmount;
         };
     }
 
@@ -78,7 +78,7 @@ public class BattleEffects
         {
             user.Mp -= healMoreCost;
             int healAmount = 85;
-            user.Hp = Mathf.Min(user.Hp + healAmount, 100);
+            user.Hp = user.Hp + healAmount;
         };
     }
 

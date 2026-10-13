@@ -11,7 +11,7 @@ public class StatusWindow : MonoBehaviour
     [SerializeField] float idleDelay = 1;
 
     [SerializeField] GameObject mini, full;
-    [SerializeField] TMP_Text miniLabels, miniValues, fullLabels, fullValues;
+    [SerializeField] TMP_Text miniName, miniLabels, miniValues, fullLabels, fullValues;
 
     float still; // seconds since the player last moved
 
@@ -57,7 +57,8 @@ public class StatusWindow : MonoBehaviour
 
     void RefreshMini()
     {
-        miniLabels.text = $"{PlayerStats.Name}\nLV\nHP\nMP\nG\nE";
+        miniName.text = PlayerStats.Name;
+        miniLabels.text = "\nLV\nHP\nMP\nG\nE";
         miniValues.text = $"\n{PlayerStats.Level}\n{PlayerStats.HP}\n{PlayerStats.MP}\n{PlayerStats.Gold}\n{PlayerStats.Exp}";
     }
 }

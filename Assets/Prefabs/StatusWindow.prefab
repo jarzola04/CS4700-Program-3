@@ -1061,6 +1061,7 @@ MonoBehaviour:
   idleDelay: 1
   mini: {fileID: 7210715485388740559}
   full: {fileID: 1852931784511365571}
+  miniName: {fileID: 4461771108480395824}
   miniLabels: {fileID: 2416113151975936952}
   miniValues: {fileID: 3305914997283890119}
   fullLabels: {fileID: 1455008359543992836}

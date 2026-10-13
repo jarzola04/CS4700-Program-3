@@ -24,6 +24,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: OverworldCommandMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 2404459229689564680, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
+      propertyPath: cursorGap
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637271588347828256, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
+      propertyPath: cursorGap
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 6149479569356329573, guid: 4bf8e1c7bb9411479b2f05af92d545c7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

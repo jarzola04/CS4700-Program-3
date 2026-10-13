@@ -10,29 +10,37 @@ public static class PlayerStats
         SpellNames.Heal, SpellNames.Hurt, SpellNames.Sleep, SpellNames.Radiant, SpellNames.StopSpell,
         SpellNames.Outside, SpellNames.Return, SpellNames.Repel, SpellNames.HealMore,
     };
-    static int mp = 99;
+    static int hp = 120;
+    static int mp = 80;
     static int gold = 120;
     static int exp = 0;
 
     public static IReadOnlyList<string> Spells => spells;
 
-    public static int Level => 1;
-    public static int HP => 15;
-    public static int MaxHP => 15;
+    public static int Level => 17;
+    public static int HP => hp;
+    public static int MaxHP => 120;
     public static int MP => mp;
-    public static int MaxMP => 99;
+    public static int MaxMP => 80;
     public static int Gold => gold;
     public static int Exp => exp;
-    public static int Strength => 4;
-    public static int Agility => 4;
-    public static int Attack => Strength;    // + weapon
-    public static int Defense => Agility / 2; // + armor + shield
-    public static string Weapon => "";       // nothing equipped
-    public static string Armor => "";
-    public static string Shield => "";
+    public static int Strength => 72;
+    public static int Agility => 66;
+    public static int Attack => Strength;
+    public static int Defense => Agility / 2;
+    public static string Weapon => "White Sword";
+    public static string Armor => "Purple";
+    public static string Shield => "Purple Too";
 
     public static void AddGold(int amount) => gold += amount;
     public static void AddExp(int amount) => exp += amount;
+
+    // Carries HP / MP out of a battle
+    public static void SetVitals(int newHp, int newMp)
+    {
+        hp = System.Math.Clamp(newHp, 1, MaxHP);
+        mp = System.Math.Clamp(newMp, 0, MaxMP);
+    }
 
     public static bool TrySpendMP(int cost)
     {

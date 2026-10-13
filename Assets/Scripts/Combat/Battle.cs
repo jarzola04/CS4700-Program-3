@@ -87,6 +87,7 @@ public class Battle : MonoBehaviour
 
     private void Finish()
     {
+        PlayerStats.SetVitals(playerGroup.member.Hp, playerGroup.member.Mp);
         ChangeState(BattlePhase.Initialize);
         enabled = false;
         if (launched) SceneManager.UnloadSceneAsync(gameObject.scene);
@@ -97,6 +98,8 @@ public class Battle : MonoBehaviour
     {
         playerGroup = new Group();
         var hero = playerGroup.AddCharacter(PlayerStats.Name, PlayerStats.Strength, PlayerStats.Agility, PlayerStats.MaxHP, PlayerStats.MaxMP, PlayerStats.Level);
+        hero.Hp = PlayerStats.HP;
+        hero.Mp = PlayerStats.MP;
         hero.exp = PlayerStats.Exp;
         hero.gold = PlayerStats.Gold;
         hero.AddCommand("Attack", 3);
