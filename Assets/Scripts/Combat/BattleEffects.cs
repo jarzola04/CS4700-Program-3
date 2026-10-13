@@ -60,8 +60,7 @@ public class BattleEffects
         return () =>
         {
             user.Mp -= healCost;
-            int healAmount = 30;
-            user.Hp = user.Hp + healAmount;
+            Restore(SpellNames.Heal, UnityEngine.Random.Range(10, 18));
         };
     }
 
@@ -77,8 +76,7 @@ public class BattleEffects
         return () =>
         {
             user.Mp -= healMoreCost;
-            int healAmount = 85;
-            user.Hp = user.Hp + healAmount;
+            Restore(SpellNames.HealMore, UnityEngine.Random.Range(85, 101));
         };
     }
 
@@ -95,7 +93,9 @@ public class BattleEffects
         {
             user.Mp -= hurtCost;
             int damage = UnityEngine.Random.Range(10, 16);
-            target.Hp = Mathf.Max(0, target.Hp - damage);
+            target.Hp -= damage;
+            MessageWindow.Show($"The {SpellNames.Hurt} spell flashes!");
+            MessageWindow.Show($"The {target.name}'s Hit Points have been reduced by {damage}.");
         };
     }
 
@@ -130,6 +130,14 @@ public class BattleEffects
                 MessageWindow.Show($"The spell had no effect on {target.name}!");
             }
         };
+    }
+
+    void Restore(string spell, int amount)
+    {
+        int before = user.Hp;
+        user.Hp += amount;
+        MessageWindow.Show($"The {spell} spell flashes!");
+        MessageWindow.Show($"{user.name}'s Hit Points have been restored by {user.Hp - before}.");
     }
 
     static Action NothingHappened()

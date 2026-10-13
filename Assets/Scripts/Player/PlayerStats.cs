@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // TODO(stats): placeholder for the real player data (items come from InventoryManager).
 public static class PlayerStats
@@ -35,11 +37,38 @@ public static class PlayerStats
     public static void AddGold(int amount) => gold += amount;
     public static void AddExp(int amount) => exp += amount;
 
+    // Returns how much was actually restored
+    public static int Heal(int amount)
+    {
+        int before = hp;
+        hp = System.Math.Min(hp + amount, MaxHP);
+        return hp - before;
+    }
+
     // Carries HP / MP out of a battle
     public static void SetVitals(int newHp, int newMp)
     {
         hp = System.Math.Clamp(newHp, 1, MaxHP);
         mp = System.Math.Clamp(newMp, 0, MaxMP);
+    }
+
+    public static void Restore()
+    {
+        hp = MaxHP;
+        mp = MaxMP;
+    }
+
+    // Full heal whenever the SwampCave scene starts
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void HookSceneLoad()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "SwampCave") Restore();
     }
 
     public static bool TrySpendMP(int cost)

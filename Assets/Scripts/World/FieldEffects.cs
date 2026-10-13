@@ -8,6 +8,7 @@ public class FieldEffects
     readonly DarknessManager darkness;
     readonly ItemData torch, magicKey;
     readonly int radiantCost;
+    const int HealCost = 4, HealMoreCost = 10;
 
     public FieldEffects(FieldCommands commands, DarknessManager darkness, ItemData torch, ItemData magicKey, int radiantCost)
     {
@@ -30,6 +31,8 @@ public class FieldEffects
         switch (spell)
         {
             case SpellNames.Radiant: return CastRadiant();
+            case SpellNames.Heal: return CastHeal(SpellNames.Heal, HealCost, 10, 17);
+            case SpellNames.HealMore: return CastHeal(SpellNames.HealMore, HealMoreCost, 85, 100);
             default: return NothingHappened(); // TODO: the other field spells
         }
     }
@@ -61,6 +64,23 @@ public class FieldEffects
         {
             PlayerStats.TrySpendMP(radiantCost);
             if (DarkPlace.IsDark) darkness.CastRadiant(); // outside, MP is spent for nothing
+        };
+    }
+
+    Action CastHeal(string spell, int cost, int min, int max)
+    {
+        if (PlayerStats.MP < cost)
+        {
+            MessageWindow.Show("Thy MP is too low.");
+            return null;
+        }
+        MessageWindow.Show($"{PlayerStats.Name} chanted the spell of {spell}.");
+        return () =>
+        {
+            PlayerStats.TrySpendMP(cost);
+            int restored = PlayerStats.Heal(UnityEngine.Random.Range(min, max + 1));
+            MessageWindow.Show($"The {spell} spell flashes!");
+            MessageWindow.Show($"{PlayerStats.Name}'s Hit Points have been restored by {restored}.");
         };
     }
 
