@@ -121,3 +121,18 @@ public class CommandEscape : Command
         return 128;
     }
 }
+
+// A spell or item: Begin shows its message and returns the effect to apply once the message has been read
+public class CommandEffect : Command
+{
+    private readonly System.Func<System.Action> begin;
+
+    public CommandEffect(string name, System.Func<System.Action> begin) : base(name, 0)
+    {
+        this.begin = begin;
+    }
+
+    public System.Action Begin() => begin();
+
+    public override void Execute() { }
+}

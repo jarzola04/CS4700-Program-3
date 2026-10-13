@@ -500,6 +500,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8455572086997573604, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
+      propertyPath: sfx
+      value: 
+      objectReference: {fileID: 1230436916}
+    - target: {fileID: 8455572086997573604, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
       propertyPath: floor
       value: 
       objectReference: {fileID: 1244543087}
@@ -512,7 +516,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 632939447}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3682079326520491965, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3edb9b3dd0c35744be2d7b42e9c60ad, type: 3}
@@ -753,6 +758,8 @@ MonoBehaviour:
   slots:
   - item: {fileID: 11400000, guid: 571ade6cdd4912aff9d6fc6a1f2dbf86, type: 2}
     count: 1
+  - item: {fileID: 11400000, guid: dc439b87e435f4897b07901362af9af6, type: 2}
+    count: 6
 --- !u!1 &1244543084
 GameObject:
   m_ObjectHideFlags: 0
@@ -107085,10 +107092,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.00090826524
-    y: 0.0028328612
-    width: 0.99727523
-    height: 0.9943343
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

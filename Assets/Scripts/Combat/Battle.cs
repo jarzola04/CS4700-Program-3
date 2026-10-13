@@ -15,6 +15,10 @@ public class Battle : MonoBehaviour
     [SerializeField]
     private WindowBattleCommand windowBattleCommand;
     [SerializeField]
+    private ListMenu spellMenu, itemMenu;
+    [SerializeField]
+    private ItemData herb;
+    [SerializeField]
     private EnemyData enemy;
     [SerializeField]
     private Image enemyImage;
@@ -34,12 +38,15 @@ public class Battle : MonoBehaviour
     private Coroutine executionCoroutine;
     private List<Command> commands = new List<Command>();
     private int turn;
+    private BattleEffects effects;
+    private ListMenu sub;
 
     public enum BattlePhase
     {
         Initialize,
         WaitCommand,
         ChooseCommand,
+        ChooseSub,
         Execute,
         Result,
         Defeat,
@@ -108,6 +115,7 @@ public class Battle : MonoBehaviour
             enemyGroup.AddCharacter("Slime", 5, 3, 5, 0, 1).AddCommand("Bite", 1);
         }
 
+        effects = new BattleEffects(playerGroup.member, enemyGroup.member, herb);
         Enter();
     }
 
@@ -144,18 +152,17 @@ public class Battle : MonoBehaviour
                 if(UIController.Submit && !MessageWindow.Typing)
                 {
                     UIController.UsePress();
-                    var cmd = playerGroup.member.command;
-                    cmd.SetTarget(enemyGroup.member);
-                    commands.Add(cmd);
-
-                    cmd = enemyGroup.member.command;
-                    cmd.SetTarget(playerGroup.member);
-                    cmd.shakeEffect = true;
-                    commands.Add(cmd);
-
-                    phase = BattlePhase.Execute;
-                    windowBattleCommand.Close();
+                    switch (windowBattleCommand.current)
+                    {
+                        case CmdFight: QueueTurn(playerGroup.member.command); break;
+                        case CmdRun: QueueTurn(new CommandEscape()); break;
+                        case CmdSpell: OpenSub(spellMenu, PlayerStats.Spells, "Thou hast not yet learned any spell."); break;
+                        case CmdItem: OpenSub(itemMenu, ItemNames(), "Nothing of use has yet been given to thee."); break;
+                    }
                 }
+                break;
+            case BattlePhase.ChooseSub:
+                UpdateSub();
                 break;
             case BattlePhase.Execute:
                 if (executionCoroutine == null)
@@ -207,6 +214,73 @@ public class Battle : MonoBehaviour
         }
     }
 
+    private const int CmdFight = 0, CmdRun = 1, CmdSpell = 2, CmdItem = 3;
+    private Vector2Int lastDir;
+
+    // Queues the player's command then the enemy's reply
+    private void QueueTurn(Command playerCmd)
+    {
+        playerCmd.SetUser(playerGroup.member);
+        playerCmd.SetTarget(enemyGroup.member);
+        commands.Add(playerCmd);
+
+        var cmd = enemyGroup.member.command;
+        cmd.SetTarget(playerGroup.member);
+        cmd.shakeEffect = true;
+        commands.Add(cmd);
+
+        phase = BattlePhase.Execute;
+        windowBattleCommand.Close();
+        if (sub != null) { sub.Close(); sub = null; }
+    }
+
+    private void OpenSub(ListMenu menu, IReadOnlyList<string> entries, string emptyMessage)
+    {
+        if (menu == null) return;
+        if (entries.Count == 0)
+        {
+            MessageWindow.Show(emptyMessage);
+            return;
+        }
+        sub = menu;
+        sub.Open(entries);
+        lastDir = InputDirection.Cardinal(UIController.Navigate);
+        ChangeState(BattlePhase.ChooseSub);
+    }
+
+    private void UpdateSub()
+    {
+        Vector2Int dir = InputDirection.Cardinal(UIController.Navigate);
+        if (dir != lastDir && dir.y != 0) sub.Step(-dir.y); // up = -index
+        lastDir = dir;
+
+        if (UIController.Cancel)
+        {
+            UIController.UsePress();
+            sub.Close();
+            sub = null;
+            ChangeState(BattlePhase.ChooseCommand);
+        }
+        else if (UIController.Submit && !MessageWindow.Typing)
+        {
+            UIController.UsePress();
+            bool isItem = sub == itemMenu;
+            int index = sub.SelectedIndex;
+            string spell = isItem ? null : sub.Selected;
+            ItemData item = isItem ? InventoryManager.Instance.Slots[index].Item : null;
+            QueueTurn(new CommandEffect(isItem ? item.ItemName : spell,
+                () => isItem ? effects.UseItem(item) : effects.CastSpell(spell)));
+        }
+    }
+
+    private static List<string> ItemNames()
+    {
+        var names = new List<string>();
+        if (InventoryManager.Instance == null) return names;
+        foreach (var slot in InventoryManager.Instance.Slots) names.Add(slot.Item.ItemName);
+        return names;
+    }
+
     private void CreateWindowBattleCommand()
     {
         windowBattleCommand.Open();
@@ -244,6 +318,26 @@ public class Battle : MonoBehaviour
                 continue;
             }
             // end sleep update
+            if (cmd is CommandEffect effectCmd)
+            {
+                System.Action effect = effectCmd.Begin();
+                yield return WaitMessage();
+                effect?.Invoke();
+                if (windowPlayerStatus != null)
+                {
+                    windowPlayerStatus.SetHP(playerGroup.member.Hp);
+                    windowPlayerStatus.SetMP(playerGroup.member.Mp);
+                }
+                yield return WaitMessage();
+                MessageWindow.Show("");
+                if (IsBattleOver())
+                {
+                    executionCoroutine = null;
+                    phase = BattlePhase.Result;
+                    yield break;
+                }
+                continue;
+            }
             cmd.Execute();
             MessageWindow.Show(cmd.useMessage);
             yield return WaitMessage();
